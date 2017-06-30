@@ -11,4 +11,4 @@ import scrapy
 class ZufengItem(scrapy.Item):
     # define the fields for your item here like:
     title = scrapy.Field()
-    money = scrapy.Field()
+    rental = scrapy.Field()
