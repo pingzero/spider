@@ -23,23 +23,31 @@ import pymysql
 # 		}
 # 		cur.execute(sql,value)
 # 		return cur.fetchall()[0]
-
+# class Slq(object):
+#     def select_title(cu,title):
+#         sql="select exists(select 1 from tenement_message where title=$s)"
+#         value=[title]
+#         cu.execute(sql,value)
+#         return cu.fetchall()[0]
 class ZufengPipeline(object):
     def open_spider(self,spider):
-        self.con = pymysql.Connect(user='root',password="zero",db="tests")
+        self.con = pymysql.Connect(user='root',password="root",db="test",charset="UTF8")
         self.cu = self.con.cursor()
 
     def process_item(self, item, spider):
-        print(spider.name,'pipelines')
-        insert_sql = "insert into lianjia (title, rental) values('{}', '{}')".format(item['title'], item['rental'])
-        print(insert_sql)
-        value={
-			'title':title,
-			'rental':rental
-		}
+        title=item['title']
+        rental=item['rental']
+        insert_sql = "insert into lianja (title, rental) values(%s,%s)"
+        # print(insert_sql)
+        value=[title,rental]
         self.cu.execute(insert_sql,value)
         self.con.commit()
         return item
+
+    def select_item(self,item,spider):
+        select_sql="select title from lianja group by title"
+        self.cu.execute(select_sql)
+        self.con.commit()
 
     def spider_close(self, spider):
         self.con.close()
